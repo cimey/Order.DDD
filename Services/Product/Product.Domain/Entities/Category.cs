@@ -21,15 +21,38 @@ namespace Product.Domain.Entities
                 throw new DomainException("Category name cannot exceed 100 characters.");
             Name = name;
             ParentCategoryId = parentCategoryId;
+
+            CreatedAt = DateTimeOffset.UtcNow;
+            CreatedBy = "system"; // This should be set based on your application's user context
         }
 
 
         [MaxLength(100)]
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
-        public int? ParentCategoryId { get; set; }
+        public int? ParentCategoryId { get; private set; }
 
         [ForeignKey(nameof(ParentCategoryId))]
-        public Category? ParentCategory { get; set; }
+        public Category? ParentCategory { get; private set; }
+
+
+        public void UpdateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new DomainException("Category name cannot be empty.");
+            if (name.Length > 100)
+                throw new DomainException("Category name cannot exceed 100 characters.");
+            Name = name;
+            UpdatedAt = DateTimeOffset.UtcNow;
+            UpdatedBy = "system";
+        }
+
+        public void UpdateParentCategory(int? parentCategoryId)
+        {
+            ParentCategoryId = parentCategoryId;
+
+            UpdatedAt = DateTimeOffset.UtcNow;
+            UpdatedBy = "system"; // This should be set based on your application's user context
+        }
     }
 }

@@ -16,7 +16,8 @@ namespace Product.Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProductEntity>().OwnsOne(p => p.Price);
+            modelBuilder.Entity<ProductEntity>().ToTable("Product").OwnsOne(p => p.Price);
+            modelBuilder.Entity<Category>().ToTable("Category");
         }
     }
 }
