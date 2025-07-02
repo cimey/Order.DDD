@@ -19,6 +19,12 @@ namespace Product.Domain.Entities
                 throw new DomainException("Category name cannot be empty.");
             if (name.Length > 100)
                 throw new DomainException("Category name cannot exceed 100 characters.");
+
+            Id = id;
+
+            if(id == parentCategoryId)
+                throw new InvalidOperationException("A category cannot be its own parent.");
+
             Name = name;
             ParentCategoryId = parentCategoryId;
 
@@ -42,6 +48,7 @@ namespace Product.Domain.Entities
                 throw new DomainException("Category name cannot be empty.");
             if (name.Length > 100)
                 throw new DomainException("Category name cannot exceed 100 characters.");
+
             Name = name;
             UpdatedAt = DateTimeOffset.UtcNow;
             UpdatedBy = "system";
@@ -49,6 +56,9 @@ namespace Product.Domain.Entities
 
         public void UpdateParentCategory(int? parentCategoryId)
         {
+            if (Id == parentCategoryId)
+                throw new InvalidOperationException("A category cannot be its own parent.");
+
             ParentCategoryId = parentCategoryId;
 
             UpdatedAt = DateTimeOffset.UtcNow;

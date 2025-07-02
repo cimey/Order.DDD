@@ -26,6 +26,15 @@ namespace Product.API.Controllers
             return Ok(category);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetCategories()
+        {
+            var query = new GetCategoriesQuery();
+            var category = await _mediator.Send(query);
+            return Ok(category);
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryCommand command)

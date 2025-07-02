@@ -11,4 +11,9 @@ namespace Product.Application.Queries
             Id = id;
         }
     }
+
+    public class  GetCategoriesQuery : IRequest<IEnumerable<CategoryDto>>
+    {
+        
+    }
 }

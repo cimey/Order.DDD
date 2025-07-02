@@ -7,5 +7,7 @@
         Task<int> AddCategoryAsync(Category category);
         Task UpdateCategoryAsync(Category category);
         Task DeleteCategoryAsync(int id);
+
+        Task<HashSet<int>> GetAllAncestorsAsync(int? parentId);
     }
 }

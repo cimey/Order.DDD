@@ -26,6 +26,7 @@ namespace Product.Application.CommandsAndHandlers
         {
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
         }
+
         public async Task<bool> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = await _categoryRepository.GetCategoryByIdAsync(request.Id);
@@ -34,6 +35,11 @@ namespace Product.Application.CommandsAndHandlers
             {
                 throw new KeyNotFoundException($"Category with ID {request.Id} not found.");
             }
+
+
+            if ((await _categoryRepository.GetAllAncestorsAsync(request.ParentCategoryId)).Contains(request.Id))
+                throw new InvalidOperationException("Cyclic parent relationship detected.");
+            
             category.UpdateParentCategory(request.ParentCategoryId);
             category.UpdateName(request.Name);
 

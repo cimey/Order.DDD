@@ -37,7 +37,7 @@ namespace Product.Infrastructure.Repositories
 
         public async Task<Category> GetCategoryByIdAsync(int id)
         {
-            var category = await _context.Categories.Include(x=>x.ParentCategory).Where(x=> x.Id == id).FirstOrDefaultAsync();
+            var category = await _context.Categories.Include(x => x.ParentCategory).Where(x => x.Id == id).FirstOrDefaultAsync();
             if (category == null)
             {
                 throw new KeyNotFoundException($"Category with ID {id} not found.");
@@ -49,6 +49,23 @@ namespace Product.Infrastructure.Repositories
         {
             _context.Categories.Update(category);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<HashSet<int>> GetAllAncestorsAsync(int? parentId)
+        {
+            var ancestors = new HashSet<int>();
+            while (parentId != null)
+            {
+                var parent = await _context.Categories.FindAsync(parentId.Value);
+                if (parent == null) break;
+
+                if (!ancestors.Add(parent.Id))
+                    break;
+
+                parentId = parent.ParentCategoryId;
+            }
+
+            return ancestors;
         }
     }
 }
